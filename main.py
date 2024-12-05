@@ -1,17 +1,7 @@
-class Account:
-  def __init__(self, pin, name, balance):
-    self.pin = pin
-    self.name = name
-    self.balance = balance
+accounts = {}
 
-accounts = {
-    "001": {
-        "name": "John",
-        "balance": 25
-    }
-}
-
-print(accounts["001"]["name"])
+def create_account(name, pin, bal):
+  accounts[pin] = {"name": name, "balance": bal}
 
 login = input("Do you have an account? y or n: ").lower()
 
@@ -26,5 +16,6 @@ elif login == "n":
   else:
     balance = 0
   create_account(user_name, pin_num, balance)
+  print(accounts[pin_num])
 else:
   print("Your input was invalid. Please try again.")
