@@ -1,7 +1,13 @@
-accounts = {}
+import json
+
+with open("accounts.json", "r") as file:
+    accounts = json.load(file)
+    print(accounts)
 
 def create_account(name, pin, bal):
   accounts[pin] = {"name": name, "balance": bal}
+  with open("accounts.json", "w") as file:
+    json.dump(accounts, file)
 
 login = input("Do you have an account? y or n: ").lower()
 
@@ -16,6 +22,6 @@ elif login == "n":
   else:
     balance = 0
   create_account(user_name, pin_num, balance)
-  print(accounts[pin_num])
+  print(accounts)
 else:
   print("Your input was invalid. Please try again.")
