@@ -1,24 +1,36 @@
 import json
 
-with open("accounts.json", "r") as file:
-    accounts = json.load(file)
-    print(accounts)
+try:
+  with open("accounts.json", "r") as file:
+      accounts = json.load(file)
+      print(accounts)
+except:
+  with open("accounts.json", "x") as file:
+      json.dump({}, file)
 
 def create_account(username, pin, bal):
   accounts[username] = {"username": username, "pin": pin, "balance": bal}
   with open("accounts.json", "w") as file:
     json.dump(accounts, file)
 
+def access_account():
+  action = input("Would you like to make a deposit or a withdrawl? d or w").lower()
+
 login = input("Do you have an account? y or n: ").lower()
 
 if login == "y":
-  pass
+  user_valid = input("What is your username? :").lower()
+  pin_valid = input("What is your pin? :")
+
+  if user_valid in accounts and pin_valid == accounts[user_valid]["pin"]:
+    print(f"You've successfully logged in! Your balance is: ${accounts[user_valid]['balance']}.")
+    access_account()
 elif login == "n":
   username = input("Please create a username: ").lower()
   if username in accounts:
     username = input("That username has been taken. Please create a username: ").lower()
   pin_num = input("Please create a 4 digit pin: ")
-  
+
   deposit = input("Would you like to submit an initial deposit? y or n").lower()
 
   if deposit == "y":
