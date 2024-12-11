@@ -43,6 +43,7 @@ def access_account(user):
       if user_active == "action":
         continue
       elif user_active == "logout":
+        print("You have been successfully logged out.")
         break
       else:
         print("Invalid input. You have been logged out.")
@@ -50,7 +51,7 @@ def access_account(user):
     elif action == "w":
       withdrawl_amt = float(input("How much would you like to withdrawl?"))
       new_balance = float(accounts[user]["balance"] - withdrawl_amt)
-      if new_balance < accounts[user]["balance"]:
+      if new_balance < 0:
         print("You do not have enough funds to withdrawl. Please try again")
         continue
       else:  
@@ -60,7 +61,15 @@ def access_account(user):
           json.dump(accounts, file)
         
         print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
-        break
+        user_active = input("Would you like to logout or do another action? Type action or logout.").lower()
+        if user_active == "action":
+          continue
+        elif user_active == "logout":
+          print("You have been successfully logged out.")
+          break
+        else:
+          print("Invalid input. You have been logged out.")
+          break
     else:
       print("You entered an invalid input.")
       continue
