@@ -3,7 +3,6 @@ import json
 try:
   with open("accounts.json", "r") as file:
       accounts = json.load(file)
-      print(accounts)
 except:
   with open("accounts.json", "w") as file:
       json.dump({}, file)
@@ -26,6 +25,8 @@ def create_account(user_acct):
 
 def access_account():
   action = input("Would you like to make a deposit or a withdrawl? d or w").lower()
+  if action == "d":
+    deposit_amt = int(input("How much would you like to withdrawl?"))
 
 def login(acct):
   login = input("Do you have an account? y or n: ").lower()
@@ -36,10 +37,12 @@ def login(acct):
         try_again = input("User invalid. Would you like to create account or retype your username? Type create or retype:").lower()
         if try_again == "create":
            create_account(acct)
-           print("You've successfully create your account!")
+           print("You've successfully created your account!")
            break
         elif try_again == "retype":
           continue
+        else:
+          try_again = input("Invalid input. Would you like to create account or retype your username? Type create or retype:").lower()
       else: 
         pin_valid = input("What is your pin? :")
 
@@ -47,6 +50,7 @@ def login(acct):
           print(f"You've successfully logged in! Your balance is: ${accounts[user_valid]['balance']}.")
         access_account()
     elif login == "n":
+      print("Let's get you an account created!")
       create_account(acct)
       print(acct)
       break
