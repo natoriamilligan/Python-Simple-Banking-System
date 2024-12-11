@@ -39,18 +39,28 @@ def access_account(user):
         json.dump(accounts, file)
       
       print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
-      break
+      user_active = ("Would you like to logout or do another action? Type action or logout.").lower()
+      if user_active == "action":
+        continue
+      elif user_active == "logout":
+        break
+      else:
+        print("Invalid input. You have been logged out.")
+        break
     elif action == "w":
-      deposit_amt = float(input("How much would you like to withdrawl?"))
-      new_balance = float(accounts[user]["balance"] + deposit_amt)
-        
-      accounts[user]["balance"] = new_balance
+      withdrawl_amt = float(input("How much would you like to withdrawl?"))
+      new_balance = float(accounts[user]["balance"] - withdrawl_amt)
+      if new_balance < accounts[user]["balance"]:
+        print("You do not have enough funds to withdrawl. Please try again")
+        continue
+      else:  
+        accounts[user]["balance"] = new_balance
 
-      with open("accounts.json", "w") as file:
-        json.dump(accounts, file)
-      
-      print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
-      break
+        with open("accounts.json", "w") as file:
+          json.dump(accounts, file)
+        
+        print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
+        break
     else:
       print("You entered an invalid input.")
       continue
