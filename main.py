@@ -33,13 +33,16 @@ def access_account(user):
     if action == "d":
       deposit_amt = float(input("How much would you like to deposit?"))
       new_balance = float(accounts[user]["balance"] + deposit_amt)
+      new_trans = {"type": "deposit", "amount": deposit_amt}
       accounts[user]["balance"] = new_balance
+      accounts[user]["history"].append(new_trans)
 
       with open("accounts.json", "w") as file:
         json.dump(accounts, file)
 
       print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
-      user_active = ("Would you like to logout or do another action? Type action or logout.").lower()
+      print(accounts[user])
+      user_active = input("Would you like to logout or do another action? Type action or logout.").lower()
       if user_active == "action":
         continue
       elif user_active == "logout":
