@@ -11,7 +11,7 @@ def create_account():
   username = input("Please create a username: ").lower()
   if username in accounts:
     username = input("That username has been taken. Please create a username: ").lower()
-  else: 
+  else:
     pin_num = input("Please create a 4 digit pin: ")
     deposit = input("Would you like to submit an initial deposit? y or n").lower()
 
@@ -58,7 +58,9 @@ def access_account(user):
         print("You do not have enough funds to withdrawl. Please try again")
         continue
       else:
+        new_trans = {"type": "deposit", "amount": withdrawl_amt}
         accounts[user]["balance"] = new_balance
+        accounts[user]["history"].append(new_trans)
 
         with open("accounts.json", "w") as file:
           json.dump(accounts, file)
