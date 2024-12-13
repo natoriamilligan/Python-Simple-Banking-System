@@ -27,9 +27,22 @@ def create_account():
   with open("accounts.json", "w") as file:
     json.dump(accounts, file)
 
+def edit_acct(user
+              ):
+  while True:
+    edit_acct = input("Would you like to change your username or pin? u or p").lower()
+    if edit_acct == "u":
+      print("You want to change your username")
+      break
+    elif edit_acct == "p":
+      break
+    else:
+      print("Your input was invalid. Please try again")
+      continue
+
 def access_account(user):
   while True:
-    action = input("Would you like to make a deposit, withdrawal, transfer, or view transaction history? d, w, t, or v").lower()
+    action = input("Would you like to make a deposit, withdrawal, transfer, view transaction history, or edit your profile? d, w, t, v, or e").lower()
     if action == "d":
       deposit_amt = float(input("How much would you like to deposit?"))
       new_balance = float(accounts[user]["balance"] + deposit_amt)
@@ -58,7 +71,9 @@ def access_account(user):
         print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
     elif action == "v":
       print(accounts[user]["history"])
-    else:
+    elif action == "e":
+      edit_acct(user)
+    else: 
       print("You entered an invalid input.")
       continue
 
@@ -92,8 +107,11 @@ def login():
 
         if user_valid in accounts and pin_valid == accounts[user_valid]["pin"]:
           print(f"You've successfully logged in! Your balance is: ${accounts[user_valid]['balance']:.2f}.")
-        access_account(user_valid)
-        break
+          access_account(user_valid)
+          break
+        else:
+          print("Invalid input. Please try again")
+          continue
     elif login == "n":
       print("Let's get you an account created!")
       create_account()
