@@ -33,7 +33,7 @@ def access_account(user):
     if action == "d":
       deposit_amt = float(input("How much would you like to deposit?"))
       new_balance = float(accounts[user]["balance"] + deposit_amt)
-      new_trans = {"type": "deposit", "amount": deposit_amt}
+      new_trans = {"type": "deposit", "amount": f"${deposit_amt:.2f}"}
       accounts[user]["balance"] = new_balance
       accounts[user]["history"].append(new_trans)
 
@@ -41,7 +41,6 @@ def access_account(user):
         json.dump(accounts, file)
 
       print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
-      print(accounts[user])
     elif action == "w":
       withdrawl_amt = float(input("How much would you like to withdrawl?"))
       new_balance = float(accounts[user]["balance"] - withdrawl_amt)
@@ -49,7 +48,7 @@ def access_account(user):
         print("You do not have enough funds to withdrawl. Please try again")
         continue
       else:
-        new_trans = {"type": "deposit", "amount": withdrawl_amt}
+        new_trans = {"type": "withdrawal", "amount": f"${withdrawl_amt:.2f}"}
         accounts[user]["balance"] = new_balance
         accounts[user]["history"].append(new_trans)
 
@@ -58,7 +57,7 @@ def access_account(user):
 
         print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
     elif action == "v":
-      pass
+      print(accounts[user]["history"])
     else:
       print("You entered an invalid input.")
       continue
