@@ -84,8 +84,11 @@ def access_account(user):
             accounts[recipient]["balance"] = accounts[recipient]["balance"] + amt_transfer
             
             accounts[user]["balance"] = accounts[user]["balance"] - amt_transfer
-            new_trans = {"type": "transfer", "amount": amt_transfer, "recipient": recipient}
-            accounts[user]["history"].append(new_trans)
+            send_trans = {"type": "transfer", "amount": amt_transfer, "recipient": recipient}
+            accounts[user]["history"].append(send_trans)
+
+            rec_trans = {"type": "transfer", "amount": amt_transfer, "sender": user}
+            accounts[recipient]["history"].append(rec_trans)
 
             with open("accounts.json", "w") as file:
               json.dump(accounts, file)
