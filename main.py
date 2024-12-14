@@ -37,28 +37,22 @@ def edit_name(user):
     print(f"You have successfully changed your username to {new_name}")
     return new_name
 
+def edit_pin(user):
+    new_pin = input("Please type in your new pin: ").lower()
+    accounts[user]["pin"] = new_pin
+    with open("accounts.json", "w") as file:
+      json.dump(accounts, file)
+    print(f"You have successfully changed your pin.")
+    print(accounts[user])
+    return new_pin
+
 def access_account(user):
-  while True:
-    action = input("Would you like to make a deposit, withdrawal, transfer, view transaction history, or edit your profile? d, w, t, v, or e").lower()
-    if action == "d":
-      deposit_amt = float(input("How much would you like to deposit?"))
-      new_balance = float(accounts[user]["balance"] + deposit_amt)
-      new_trans = {"type": "deposit", "amount": f"${deposit_amt:.2f}"}
-      accounts[user]["balance"] = new_balance
-      accounts[user]["history"].append(new_trans)
-
-      with open("accounts.json", "w") as file:
-        json.dump(accounts, file)
-
-      print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
-    elif action == "w":
-      withdrawl_amt = float(input("How much would you like to withdrawl?"))
-      new_balance = float(accounts[user]["balance"] - withdrawl_amt)
-      if new_balance < 0:
-        print("You do not have enough funds to withdrawl. Please try again")
-        continue
-      else:
-        new_trans = {"type": "withdrawal", "amount": f"${withdrawl_amt:.2f}"}
+    while True:
+      action = input("Would you like to make a deposit, withdrawal, transfer, view transaction history, or edit your profile? d, w, t, v, or e").lower()
+      if action == "d":
+        deposit_amt = float(input("How much would you like to deposit?"))
+        new_balance = float(accounts[user]["balance"] + deposit_amt)
+        new_trans = {"type": "deposit", "amount": f"${deposit_amt:.2f}"}
         accounts[user]["balance"] = new_balance
         accounts[user]["history"].append(new_trans)
 
@@ -66,33 +60,49 @@ def access_account(user):
           json.dump(accounts, file)
 
         print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
-    elif action == "v":
-      print(accounts[user]["history"])
-    elif action == "e":
-      while True:
-        edit_option = input("Would you like to change your username or pin? u or p").lower()
-
-        if edit_option == "u":
-          user = edit_name(user)
-          break
-        elif edit_option == "p":
-          break
-        else:
-          print("You entered an invalid input. Please try again")
+      elif action == "w":
+        withdrawl_amt = float(input("How much would you like to withdrawl?"))
+        new_balance = float(accounts[user]["balance"] - withdrawl_amt)
+        if new_balance < 0:
+          print("You do not have enough funds to withdrawl. Please try again")
           continue
-    else:
-      print("You entered an invalid input.")
-      continue
+        else:
+          new_trans = {"type": "withdrawal", "amount": f"${withdrawl_amt:.2f}"}
+          accounts[user]["balance"] = new_balance
+          accounts[user]["history"].append(new_trans)
 
-    user_active = input("Would you like to logout or do another action? Type action or logout.").lower()
-    if user_active == "action":
-      continue
-    elif user_active == "logout":
-      print("You have been successfully logged out.")
-      break
-    else:
-      print("Invalid input. You have been logged out.")
-      break
+          with open("accounts.json", "w") as file:
+            json.dump(accounts, file)
+
+          print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
+      elif action == "v":
+        print(accounts[user]["history"])
+      elif action == "e":
+        while True:
+          edit_option = input("Would you like to change your username or pin? u or p").lower()
+
+          if edit_option == "u":
+            user = edit_name(user)
+            break
+          elif edit_option == "p":
+            accounts[user]["pin"] = edit_pin(user)
+            break
+          else:
+            print("You entered an invalid input. Please try again")
+            continue
+      else:
+        print("You entered an invalid input.")
+        continue
+
+      user_active = input("Would you like to logout or do another action? Type action or logout.").lower()
+      if user_active == "action":
+        continue
+      elif user_active == "logout":
+        print("You have been successfully logged out.")
+        break
+      else:
+        print("Invalid input. You have been logged out.")
+        break
 
 def login():
   login = input("Do you have an account? y or n: ").lower()
