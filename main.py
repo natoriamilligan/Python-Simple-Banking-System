@@ -52,9 +52,9 @@ def access_account(user):
       if action == "d":
         deposit_amt = float(input("How much would you like to deposit?"))
         new_balance = float(accounts[user]["balance"] + deposit_amt)
-        new_trans = {"type": "deposit", "amount": f"${deposit_amt:.2f}"}
+        new_dep = {"type": "deposit", "amount": f"${deposit_amt:.2f}"}
         accounts[user]["balance"] = new_balance
-        accounts[user]["history"].append(new_trans)
+        accounts[user]["history"].append(new_dep)
 
         with open("accounts.json", "w") as file:
           json.dump(accounts, file)
@@ -67,14 +67,35 @@ def access_account(user):
           print("You do not have enough funds to withdrawl. Please try again")
           continue
         else:
-          new_trans = {"type": "withdrawal", "amount": f"${withdrawl_amt:.2f}"}
+          new_withdrawl = {"type": "withdrawal", "amount": f"${withdrawl_amt:.2f}"}
           accounts[user]["balance"] = new_balance
-          accounts[user]["history"].append(new_trans)
+          accounts[user]["history"].append(new_withdrawl)
 
           with open("accounts.json", "w") as file:
             json.dump(accounts, file)
 
           print(f"Your new balance is: ${accounts[user]['balance']:.2f}.")
+      elif action == "t":
+        while True:
+          recipient = input("Type in the username of the account you would like to tranfer money to: ").lower()
+          if recipient in accounts:
+            print(f"Your balance is: ${accounts[user]['balance']:.2f}.")
+            amt_transfer = float(input("How much money would you like to transfer?"))
+            accounts[recipient]["balance"] = accounts[recipient]["balance"] + amt_transfer
+            
+            accounts[user]["balance"] = accounts[user]["balance"] - amt_transfer
+            new_trans = {"type": "transfer", "amount": amt_transfer, "recipient": recipient}
+            accounts[user]["history"].append(new_trans)
+
+            with open("accounts.json", "w") as file:
+              json.dump(accounts, file)
+            
+            print(f"You have successfully transferred ${amt_transfer:.2f} to {recipient}.")
+            break
+          else:
+            print("That username is invalid, please try again.")
+            continue
+
       elif action == "v":
         print(accounts[user]["history"])
       elif action == "e":
