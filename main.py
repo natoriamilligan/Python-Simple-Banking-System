@@ -28,17 +28,14 @@ def create_account():
     json.dump(accounts, file)
 
 def edit_name(user):
-  while True:
-    edit_acct = input("Would you like to change your username or pin? u or p").lower()
-    if edit_acct == "u":
-      new_name = input("Please type in your new username: ").lower()
-      accounts[new_name] = accounts[user]
-      accounts[new_name]["username"] = new_name
-      del accounts[user]
-      with open("accounts.json", "w") as file:
-        json.dump(accounts, file)
-      print(f"You have successfully changed your username to {new_name}")
-      return new_name
+    new_name = input("Please type in your new username: ").lower()
+    accounts[new_name] = accounts[user]
+    accounts[new_name]["username"] = new_name
+    del accounts[user]
+    with open("accounts.json", "w") as file:
+      json.dump(accounts, file)
+    print(f"You have successfully changed your username to {new_name}")
+    return new_name
 
 def access_account(user):
   while True:
@@ -72,7 +69,17 @@ def access_account(user):
     elif action == "v":
       print(accounts[user]["history"])
     elif action == "e":
-      user = edit_name(user)
+      while True:
+        edit_option = input("Would you like to change your username or pin? u or p").lower()
+
+        if edit_option == "u":
+          user = edit_name(user)
+          break
+        elif edit_option == "p":
+          break
+        else:
+          print("You entered an invalid input. Please try again")
+          continue
     else:
       print("You entered an invalid input.")
       continue
