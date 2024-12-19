@@ -32,7 +32,7 @@ def create_account():
       else:
         print("Input was invalid. Please start over")
         continue
-    accounts[username] = {"username": username, "pin": pin_num, "balance": balance, "history": [history]}
+    accounts[username] = {"first_name": first_name, "last_name": last_name, "username": username, "pin": pin_num, "balance": balance, "history": [history]}
     with open("accounts.json", "w") as file:
       json.dump(accounts, file)
     print(f"You have successfully created an account with a balance of ${balance:.2f}")
