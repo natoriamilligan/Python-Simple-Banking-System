@@ -8,26 +8,34 @@ except:
       json.dump({}, file)
 
 def create_account():
-  username = input("Please create a username: ").lower()
-  if username in accounts:
-    username = input("That username has been taken. Please create a username: ").lower()
-  else:
-    pin_num = input("Please create a 4 digit pin: ")
-    first_name = input("What is your first name?").lower()
-    last_name = input("What is your last name?").lower()
-    deposit = input("Would you like to submit an initial deposit? y or n").lower()
+    username = input("Please create a username: ").lower()
+    if username in accounts:
+      username = input("That username has been taken. Please create a username: ").lower()
+    else:
+      pin_num = input("Please create a 4 digit pin: ")
+      first_name = input("What is your first name?").lower()
+      last_name = input("What is your last name?").lower()
+      deposit = input("Would you like to submit an initial deposit? y or n").lower()
 
-  if deposit == "y":
-     balance = float(input("Please enter the amount you would like to deposit (only numbers no signs)"))
-     history = {"type": "deposit", "amount": balance }
-  elif deposit == "n":
-    balance = 0
-  else:
-    print("Input was invalid. Please start over")
-    create_account()
-  accounts[username] = {"username": username, "pin": pin_num, "balance": balance, "history": [history]}
-  with open("accounts.json", "w") as file:
-    json.dump(accounts, file)
+    while True:
+      if deposit == "y":
+        try:
+          balance = float(input("Please enter the amount you would like to deposit (only numbers no signs)"))
+          history = {"type": "deposit", "amount": balance }
+          break
+        except:
+          print("Input was invalid. Please start over")
+          continue
+      elif deposit == "n":
+        balance = 0
+        break
+      else:
+        print("Input was invalid. Please start over")
+        continue
+    accounts[username] = {"username": username, "pin": pin_num, "balance": balance, "history": [history]}
+    with open("accounts.json", "w") as file:
+      json.dump(accounts, file)
+    print(f"You have successfully created an account with a balance of ${balance:.2f}")
 
 def edit_acct(user):
   while True:
