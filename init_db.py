@@ -1,4 +1,4 @@
-from db_connection import conn
+from db_connection import conn, sqlite3
 
 sql_statements = [
     """CREATE TABLE IF NOT EXISTS accounts (
@@ -7,7 +7,7 @@ sql_statements = [
                 last_name TEXT NOT NULL,
                 username TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
-                balance INTEGER NOT NULL,
+                balance INTEGER NOT NULL
         );""",
 
     """CREATE TABLE IF NOT EXISTS transactions (
@@ -23,11 +23,18 @@ sql_statements = [
 ]
 
 def initialize_database():
+    print("Connection running")
 
-    cursor = conn.cursor()
+    try:
+        cursor = conn.cursor()
+        print("cursor created")
+        for statement in sql_statements:
+            cursor.execute(statement)
 
-    cursor.execute(sql_statements)
+        conn.commit()
 
-    conn.commit()
+        print("Tables created successfully")
+    except sqlite3.OperationalError as e:
+        print("Failed to create tables:", e)
 
-    print("Tables created successfully")
+initialize_database()
