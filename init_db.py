@@ -32,6 +32,7 @@ def initialize_database():
             cursor.execute(statement)
 
         conn.commit()
+        conn.close()
 
         print("Tables created successfully")
     except sqlite3.OperationalError as e:
