@@ -31,6 +31,8 @@ def initialize_database():
         for statement in sql_statements:
             cursor.execute(statement)
 
+        cursor.execute("INSERT INTO accounts (first_name, last_name, username, password, balance) VALUES (?, ?, ?, ?, ?)", ("tori", "ray", "nray22", "5555", 0))
+
         conn.commit()
         conn.close()
 
