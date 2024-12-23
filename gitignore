@@ -1,4 +1,2 @@
 .venv
-accounts.db
-__pycache__
 accounts.json
