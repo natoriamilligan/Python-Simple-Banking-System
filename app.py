@@ -10,4 +10,14 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     
+    db.init_app(app)
+
     api = Api(app)
+
+    print('somehow this is working')
+
+    with app.app_context():
+        db.create_all()
+
+    return app
+    
