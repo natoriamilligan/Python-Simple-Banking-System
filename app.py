@@ -5,6 +5,7 @@ from flask_smorest import Api
 from db import db
 
 from resources.accounts import blp as AccountsBlueprint
+from resources.transactions import blp as TransactionsBlueprint
 
 load_dotenv()
 
@@ -19,6 +20,7 @@ def create_app():
     api = Api(app)
 
     api.register_blueprint(AccountsBlueprint)
+    api.register_blueprint(TransactionsBlueprint)
 
     with app.app_context():
         db.create_all()
