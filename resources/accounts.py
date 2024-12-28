@@ -5,17 +5,20 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from db import db
 from models import AccountModel
+from schemas import AccountSchema
 
 blp = Blueprint("accounts", __name__, description="Operation on accounts")
 
 @blp.route("/account")
 class AccountList(MethodView):
+    @blp.response(200, AccountSchema(many=True))
     def get(self):
         return AccountModel.query.all()
 
+    @blp.arguments(AccountSchema)
     def post(self, account_data):
         account = AccountModel(**account_data)
-
+        
         try:
             db.session.add(account)
             db.session.commit()
