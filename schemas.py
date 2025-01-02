@@ -5,7 +5,7 @@ class TransactionSchema(Schema):
     type = fields.Str(required=True)
     amount = fields.Float(required=True)
     recipient = fields.Str(required=True)
-    type = fields.Str(required=True)
+    account_id = fields.Int(required=True)
 
 class AccountSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -13,5 +13,5 @@ class AccountSchema(Schema):
     last_name = fields.Str(required=True)
     username = fields.Str(required=True)
     password = fields.Str(required=True)
-    balance = fields.Float(dump_only=True)
+    balance = fields.Str(dump_only=True)
     transactions = fields.List(fields.Nested(TransactionSchema()), dump_only=True)
