@@ -16,9 +16,11 @@ class AccountList(MethodView):
         return AccountModel.query.all()
 
     @blp.arguments(AccountSchema)
+    @blp.response(201, AccountSchema)
     def post(self, account_data):
         account = AccountModel(**account_data)
-        
+        print(account)
+    
         try:
             db.session.add(account)
             db.session.commit()
