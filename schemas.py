@@ -7,11 +7,13 @@ class TransactionSchema(Schema):
     recipient = fields.Str(required=True)
     account_id = fields.Int(required=True)
 
-class AccountSchema(Schema):
-    id = fields.Int(dump_only=True)
+class UpdateAccountSchema(Schema):
     first_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
-    username = fields.Str(required=True)
     password = fields.Str(required=True)
+
+class AccountSchema(UpdateAccountSchema):
+    id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
     balance = fields.Str(dump_only=True)
     transactions = fields.List(fields.Nested(TransactionSchema()), dump_only=True)
