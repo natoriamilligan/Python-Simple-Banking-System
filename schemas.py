@@ -4,7 +4,7 @@ class TransactionSchema(Schema):
     id = fields.Int(dump_only=True)
     type = fields.Str(required=True)
     amount = fields.Float(required=True)
-    recipient = fields.Str(required=True)
+    recipient_account_id = fields.Integer(required=True)
     account_id = fields.Int(required=True)
 
 class UpdateAccountSchema(Schema):

@@ -21,17 +21,22 @@ class AccountTransactions(MethodView):
     def post(self, transaction_data, account_id):
         account = AccountModel.query.get_or_404(account_id)
 
-        if transaction_data["type"] == "deposit":
-            account.balance = account.balance + transaction_data["amount"]
-            transaction = TransactionModel(**transaction_data)
-        elif transaction_data["type"] == "withdrawal":
-            if account.balance - transaction_data["amount"] < 0:
-                abort(422, message="Not enough funds in the account")
-            else:
-                account.balance = account.balance - transaction_data["amount"]
+        if transaction_data["recipient_account_id"] == account_id:
+            if transaction_data["type"] == "deposit":
+                account.balance = account.balance + transaction_data["amount"]
                 transaction = TransactionModel(**transaction_data)
+            elif transaction_data["type"] == "withdrawal":
+                if account.balance - transaction_data["amount"] < 0:
+                    abort(422, message="Not enough funds in the account")
+                else:
+                    account.balance = account.balance - transaction_data["amount"]
+                    transaction = TransactionModel(**transaction_data)
+            else:
+                abort(400, message="Invalid JSON payload")
+        elif AccountModel.query.filter(AccountModel.id == transaction_data["account_id"]).first():
+            pass
         else:
-            abort(400, message="Invalid JSON payload")
+            pass
 
         try:
             db.session.add(transaction)
