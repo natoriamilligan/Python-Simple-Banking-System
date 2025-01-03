@@ -3,15 +3,19 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
 from models import AccountModel
+from schemas import TransactionSchema, AccountSchema
 
 blp = Blueprint("transactions", __name__, description="Operation on transactions")
 
 @blp.route("/account/<int:account_id>/transaction")
 class AccountTransactions(MethodView):
+    @blp.response(200, TransactionSchema(many=True))
     def get(self, account_id):
         account = AccountModel.query.get_or_404(account_id)
         return account.transactions.all()
 
+    @blp.arguments(TransactionSchema)
+    @blp.response(200, AccountSchema)
     def post(self, account_data, account_id):
         account = AccountModel.query.get_or_404(account_id)
 
@@ -25,7 +29,7 @@ class AccountTransactions(MethodView):
         else:
             abort(400, message="Invalid JSON payload")
 
-        return {"message": f"Your new balance is ${account.balance}"}
+        return account
 
 
 @blp.route("/transaction/<int:transaction_id>")
