@@ -41,10 +41,11 @@ class AccountTransactions(MethodView):
 
         return account
 
-
 @blp.route("/transaction/<int:transaction_id>")
 class Transaction(MethodView):
+    @blp.response(200, TransactionSchema)
     def get(self, transaction_id):
-        pass
+        transaction = TransactionModel.query.get_or_404(transaction_id)
+        return transaction
 
 
