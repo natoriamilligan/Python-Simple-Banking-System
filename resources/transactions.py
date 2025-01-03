@@ -1,7 +1,9 @@
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from sqlalchemy.exc import SQLAlchemyError
 
+from db import db
 from models import AccountModel, TransactionModel
 from schemas import TransactionSchema, AccountSchema
 
@@ -27,8 +29,15 @@ class AccountTransactions(MethodView):
                 abort(422, message="Not enough funds in the account")
             else:
                 account.balance = account.balance - transaction_data["amount"]
+                transaction = TransactionModel(**transaction_data)
         else:
             abort(400, message="Invalid JSON payload")
+
+        try:
+            db.session.add(transaction)
+            db.session.commit()
+        except SQLAlchemyError:
+            abort(500, message="An error occured adding the transaction to the database")
 
         return account
 
