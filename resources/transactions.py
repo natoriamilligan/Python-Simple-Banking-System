@@ -16,41 +16,47 @@ class AccountTransactions(MethodView):
         account = AccountModel.query.get_or_404(account_id)
         return account.transactions.all()
 
-    @blp.arguments(TransactionSchema)
-    @blp.response(200, AccountSchema)
-    def post(self, transaction_data, account_id):
-        account = AccountModel.query.get_or_404(account_id)
-
-        if transaction_data["recipient_account_id"] == account_id:
-            if transaction_data["type"] == "deposit":
-                account.balance = account.balance + transaction_data["amount"]
-                transaction = TransactionModel(**transaction_data)
-            elif transaction_data["type"] == "withdrawal":
-                if account.balance - transaction_data["amount"] < 0:
-                    abort(422, message="Not enough funds in the account")
-                else:
-                    account.balance = account.balance - transaction_data["amount"]
-                    transaction = TransactionModel(**transaction_data)
-            else:
-                abort(400, message="Invalid JSON payload")
-        elif AccountModel.query.filter(AccountModel.id == transaction_data["account_id"]).first():
-            pass
-        else:
-            pass
-
-        try:
-            db.session.add(transaction)
-            db.session.commit()
-        except SQLAlchemyError:
-            abort(500, message="An error occured adding the transaction to the database")
-
-        return account
-
 @blp.route("/transaction/<int:transaction_id>")
 class Transaction(MethodView):
     @blp.response(200, TransactionSchema)
     def get(self, transaction_id):
         transaction = TransactionModel.query.get_or_404(transaction_id)
         return transaction
+    
+@blp.route("/transaction")
+class CreateAccountTransactions(MethodView):
+    @blp.arguments(TransactionSchema)
+    @blp.response(200, TransactionSchema)
+    def post(self, transaction_data):
+        if AccountModel.query.filter(AccountModel.id == transaction_data["recipient_id"]).first():
+            submitter_account = AccountModel.query.get_or_404(transaction_data["submitter_id"])
+            if transaction_data["type"] == "deposit":
+                submitter_account.balance = submitter_account.balance + transaction_data["amount"]
+            elif transaction_data["type"] == "withdrawal":
+                if submitter_account.balance - transaction_data["amount"] < 0:
+                    abort(422, message="Not enough funds in the account")
+                else:
+                    submitter_account.balance = submitter_account.balance - transaction_data["amount"]
+            elif transaction_data["type"] == "transfer":
+                if submitter_account.balance - transaction_data["amount"] < 0:
+                    abort(422, message="Not enough funds in the account")
+                else:
+                    submitter_account.balance = submitter_account.balance - transaction_data["amount"]
+                    
+                    recipient_account = AccountModel.query.get_or_404(transaction_data["recipient_id"])
+                    recipient_account.balance = recipient_account.balance + transaction_data["amount"]
+            else:
+                abort(400, message="Invalid JSON payload")
+        else:
+            abort(404, message="Recipient not found")
 
+        transaction = TransactionModel(**transaction_data)
+        
+        try:
+            db.session.add(transaction)
+            db.session.commit()
+        except SQLAlchemyError:
+            abort(500, message="An error occured adding the transaction to the database")
+
+        return transaction
 
