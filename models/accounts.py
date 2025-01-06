@@ -1,6 +1,7 @@
 from db import db
 from models.deposits import DepositModel
 from models.transfers import TransferModel
+from models.withdrawals import WithdrawalModel
 
 class AccountModel(db.Model):
     __tablename__ = "accounts"
@@ -14,3 +15,4 @@ class AccountModel(db.Model):
     sent_transfers = db.relationship("TransferModel", foreign_keys=[TransferModel.submitter_id], back_populates="submitter", lazy="dynamic", cascade="all, delete")
     received_transfers = db.relationship("TransferModel", foreign_keys=[TransferModel.recipient_id], back_populates="submitter", lazy="dynamic", cascade="all, delete")
     deposits = db.relationship("DepositModel", foreign_keys=[DepositModel.account_id], back_populates="account", lazy="dynamic", cascade="all, delete")
+    withdrawals = db.relationship("WithdrawalModel", foreign_keys=[WithdrawalModel.account_id], back_populates="account", lazy="dynamic", cascade="all, delete")
