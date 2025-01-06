@@ -5,6 +5,12 @@ class DepositSchema(Schema):
     type = fields.Str(required=True)
     amount = fields.Float(required=True)
     account_id = fields.Int(required=True)
+    
+class WithdrawalSchema(Schema):
+    id = fields.Int(dump_only=True)
+    type = fields.Str(required=True)
+    amount = fields.Float(required=True)
+    account_id = fields.Int(required=True)
 
 class TransferSchema(Schema):
     id = fields.Int(dump_only=True)
