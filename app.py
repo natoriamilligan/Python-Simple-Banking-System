@@ -4,7 +4,7 @@ from flask_smorest import Api
 from db import db
 
 from resources.accounts import blp as AccountsBlueprint
-from resources.transactions import blp as TransactionsBlueprint
+from resources.deposits import blp as DepositsBlueprint
 
 def create_app():
     app = Flask(__name__)
@@ -21,7 +21,7 @@ def create_app():
     api = Api(app)
 
     api.register_blueprint(AccountsBlueprint)
-    api.register_blueprint(TransactionsBlueprint)
+    api.register_blueprint(DepositsBlueprint)
 
     with app.app_context():
         db.create_all()
