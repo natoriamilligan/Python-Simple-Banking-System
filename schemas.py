@@ -2,19 +2,16 @@ from marshmallow import Schema, fields
 
 class DepositSchema(Schema):
     id = fields.Int(dump_only=True)
-    type = fields.Str(required=True)
     amount = fields.Float(required=True)
-    account_id = fields.Int(required=True)
+    account_id = fields.Int(dump_only=True)
     
 class WithdrawalSchema(Schema):
     id = fields.Int(dump_only=True)
-    type = fields.Str(required=True)
     amount = fields.Float(required=True)
     account_id = fields.Int(required=True)
 
 class TransferSchema(Schema):
     id = fields.Int(dump_only=True)
-    type = fields.Str(required=True)
     amount = fields.Float(required=True)
     submitter_id = fields.Int(required=True)
     recipient_id = fields.Int(required=True)
