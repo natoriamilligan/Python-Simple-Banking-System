@@ -8,7 +8,7 @@ class DepositSchema(Schema):
 class WithdrawalSchema(Schema):
     id = fields.Int(dump_only=True)
     amount = fields.Float(required=True)
-    account_id = fields.Int(required=True)
+    account_id = fields.Int(dump_only=True)
 
 class TransferSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -28,3 +28,4 @@ class AccountSchema(UpdateAccountSchema):
     sent_transfers = fields.List(fields.Nested(TransferSchema()), dump_only=True)
     received_transfers = fields.List(fields.Nested(TransferSchema()), dump_only=True)
     deposits = fields.List(fields.Nested(DepositSchema()), dump_only=True)
+    withdrawals = fields.List(fields.Nested(WithdrawalSchema()), dump_only=True)
