@@ -6,6 +6,7 @@ from db import db
 from resources.accounts import blp as AccountsBlueprint
 from resources.deposits import blp as DepositsBlueprint
 from resources.withdrawals import blp as WithdrawalsBlueprint
+from resources.transfers import blp as TransfersBlueprint
 
 def create_app():
     app = Flask(__name__)
@@ -24,6 +25,7 @@ def create_app():
     api.register_blueprint(AccountsBlueprint)
     api.register_blueprint(DepositsBlueprint)
     api.register_blueprint(WithdrawalsBlueprint)
+    api.register_blueprint(TransfersBlueprint)
 
     with app.app_context():
         db.create_all()
