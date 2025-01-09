@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_smorest import Api
 from db import db
+from flask_jwt_extended import JWTManager
 
 from resources.accounts import blp as AccountsBlueprint
 from resources.deposits import blp as DepositsBlueprint
@@ -21,6 +22,8 @@ def create_app():
     db.init_app(app)
 
     api = Api(app)
+
+    jwt = JWTManager(app)
 
     api.register_blueprint(AccountsBlueprint)
     api.register_blueprint(DepositsBlueprint)
