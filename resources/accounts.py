@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 
 from db import db
 from models import AccountModel
@@ -60,6 +60,7 @@ class Account(MethodView):
         account = AccountModel.query.get_or_404(account_id)
         return account
     
+    @jwt_required()
     @blp.arguments(UpdateAccountSchema)
     @blp.response(201, AccountSchema)
     def put(self, account_data, account_id):
@@ -77,6 +78,7 @@ class Account(MethodView):
 
         return account
 
+    @jwt_required()
     def delete(self, account_id):
         account = AccountModel.query.get_or_404(account_id) 
 
@@ -84,6 +86,6 @@ class Account(MethodView):
             db.session.delete(account)
             db.session.commit()
 
-            return {"message":"The account was successfully deleted."}
+            return {"message": "The account was successfully deleted."}
         except SQLAlchemyError:
             abort(500, message="An error occured while deleting the account")

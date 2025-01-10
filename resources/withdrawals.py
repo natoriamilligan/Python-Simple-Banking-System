@@ -1,7 +1,7 @@
-from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
+from flask_jwt_extended import jwt_required
 
 from db import db
 from models import AccountModel, WithdrawalModel
@@ -16,6 +16,7 @@ class AccountWithdrawal(MethodView):
         account = AccountModel.query.get_or_404(account_id)
         return account.withdrawals.all()
     
+    @jwt_required()
     @blp.arguments(WithdrawalSchema)
     @blp.response(200, WithdrawalSchema)
     def post(self, withdrawal_data, account_id):

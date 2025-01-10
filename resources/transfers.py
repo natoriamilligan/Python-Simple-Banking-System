@@ -1,7 +1,7 @@
-from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
+from flask_jwt_extended import jwt_required
 
 from db import db
 from models import TransferModel, AccountModel
@@ -25,6 +25,7 @@ class AccountReceivedtransfer(MethodView):
     
 @blp.route("/transfer")
 class AccountTransfer(MethodView):
+    @jwt_required()
     @blp.arguments(TransferSchema)
     @blp.response(200, TransferSchema)
     def post(self, transfer_data):

@@ -1,7 +1,7 @@
-from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
+from flask_jwt_extended import jwt_required
 
 from db import db
 from models import AccountModel, DepositModel
@@ -16,6 +16,7 @@ class AccountDeposit(MethodView):
         account = AccountModel.query.get_or_404(account_id)
         return account.deposits.all()
     
+    @jwt_required()
     @blp.arguments(DepositSchema)
     @blp.response(200, DepositSchema)
     def post(self, deposit_data, account_id):
@@ -35,8 +36,6 @@ class AccountDeposit(MethodView):
 
         return deposit
     
-
-
 @blp.route("/deposit/<int:deposit_id>")
 class Deposit(MethodView):
     @blp.response(200, DepositSchema)
