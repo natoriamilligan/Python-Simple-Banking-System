@@ -19,7 +19,7 @@ class TransferSchema(Schema):
 class UpdateAccountSchema(Schema):
     first_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
-    password = fields.Str(required=True)
+    password = fields.Str(required=True, load_only=True)
 
 class AccountSchema(UpdateAccountSchema):
     id = fields.Int(dump_only=True)
