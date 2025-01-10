@@ -29,3 +29,7 @@ class AccountSchema(UpdateAccountSchema):
     received_transfers = fields.List(fields.Nested(TransferSchema()), dump_only=True)
     deposits = fields.List(fields.Nested(DepositSchema()), dump_only=True)
     withdrawals = fields.List(fields.Nested(WithdrawalSchema()), dump_only=True)
+
+class LoginSchema(Schema):
+    username = fields.Str(required=True)
+    password = fields.Str(required=True)
