@@ -3,10 +3,11 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
+from flask_jwt_extended import create_access_token
 
 from db import db
 from models import AccountModel
-from schemas import AccountSchema, UpdateAccountSchema
+from schemas import AccountSchema, UpdateAccountSchema, LoginSchema
 
 blp = Blueprint("accounts", __name__, description="Operation on accounts")
 
@@ -38,6 +39,19 @@ class CreateAccount(MethodView):
             abort(500, message="An error occured while inserting the item into the database")
 
         return account
+    
+@blp.route("/login")
+class AccountLogin(MethodView):
+    @blp.arguments(LoginSchema)
+    def post(self, account_data):
+        account = AccountModel.query.filter(AccountModel.username == account_data["username"]).first()
+
+        if account and pbkdf2_sha256.verify(account_data["password"], account.password):
+            access_token = create_access_token(identity=str(account.id))
+            return {"access_token": access_token}
+        else:
+            abort(401, message="Invalid credentials")
+
 
 @blp.route("/account/<int:account_id>")
 class Account(MethodView):
