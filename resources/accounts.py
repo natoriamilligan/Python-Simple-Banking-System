@@ -2,6 +2,7 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
+from passlib.hash import pbkdf2_sha256
 
 from db import db
 from models import AccountModel
@@ -15,13 +16,20 @@ class AccountList(MethodView):
     def get(self):
         return AccountModel.query.all()
 
+@blp.route("/create")
+class CreateAccount(MethodView):
     @blp.arguments(AccountSchema)
     @blp.response(201, AccountSchema)
     def post(self, account_data):
         if AccountModel.query.filter(AccountModel.username == account_data["username"]).first():
                 abort(409, message="The username you entered is already taken")
                 
-        account = AccountModel(**account_data)
+        account = AccountModel(
+            first_name=account_data["first_name"],
+            last_name=account_data["last_name"],
+            username=account_data["username"],
+            password=pbkdf2_sha256.hash(account_data["password"])
+            )
     
         try:
             db.session.add(account)
