@@ -23,6 +23,7 @@ def create_app():
 
     api = Api(app)
 
+    app.config["JWT_SECRET_KEY"] = "79023088310581544527589837667420155225"
     jwt = JWTManager(app)
 
     api.register_blueprint(AccountsBlueprint)
