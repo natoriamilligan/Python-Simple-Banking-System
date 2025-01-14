@@ -3,11 +3,11 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 
 from db import db
-from models import AccountModel
-from schemas import AccountSchema, UpdateAccountSchema, LoginSchema
+from models import AccountModel, BlocklistModel
+from schemas import AccountSchema, UpdateAccountSchema, LoginSchema, BlocklistSchema
 
 blp = Blueprint("accounts", __name__, description="Operation on accounts")
 
@@ -51,6 +51,20 @@ class AccountLogin(MethodView):
             return {"access_token": access_token}
         else:
             abort(401, message="Invalid credentials")
+
+@blp.route("/logout")
+class AccountLogout(MethodView):
+    @jwt_required()
+    @blp.arguments(BlocklistSchema)
+    def post(self, blocklist_data):
+        jti = get_jwt()["jti"]
+
+        blocklist = BlocklistModel(jti=jti)
+        
+        db.session.add(blocklist)
+        db.session.commit()
+
+        return {"message": "Successfully logged out"}, 200
 
 
 @blp.route("/account/<int:account_id>")
