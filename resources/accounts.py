@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, get_jwt
 
 from db import db
 from models import AccountModel, BlocklistModel
@@ -47,8 +47,9 @@ class AccountLogin(MethodView):
         account = AccountModel.query.filter(AccountModel.username == account_data["username"]).first()
 
         if account and pbkdf2_sha256.verify(account_data["password"], account.password):
-            access_token = create_access_token(identity=str(account.id))
-            return {"access_token": access_token}
+            access_token = create_access_token(identity=str(account.id), fresh=True)
+            refresh_token = create_refresh_token(identity=str(account.id))
+            return {"access_token": access_token, "refresh_token": refresh_token}
         else:
             abort(401, message="Invalid credentials")
 
@@ -65,6 +66,14 @@ class AccountLogout(MethodView):
         db.session.commit()
 
         return {"message": "Successfully logged out"}, 200
+    
+@blp.route("/refresh")
+class TokenRefresh(MethodView):
+    @jwt_required(refresh=True)
+    def post(self):
+        current_account = get_jwt_identity()
+        new_token = create_access_token(identity=current_account, fresh=False)
+        return {"access_token": new_token}  
 
 
 @blp.route("/account/<int:account_id>")
@@ -92,7 +101,7 @@ class Account(MethodView):
 
         return account
 
-    @jwt_required()
+    @jwt_required(fresh=True)
     def delete(self, account_id):
         account = AccountModel.query.get_or_404(account_id) 
 
