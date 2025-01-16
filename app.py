@@ -3,6 +3,7 @@ from flask import Flask, jsonify
 from flask_smorest import Api
 from db import db
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 
 from models import BlocklistModel
 from resources.accounts import blp as AccountsBlueprint
@@ -21,7 +22,7 @@ def create_app():
     app.config["OPENAPI_VERSION"] = "3.0.3"
 
     db.init_app(app)
-
+    migrate = Migrate(app, db)
     api = Api(app)
 
     app.config["JWT_SECRET_KEY"] = "79023088310581544527589837667420155225"
@@ -84,10 +85,6 @@ def create_app():
     api.register_blueprint(DepositsBlueprint)
     api.register_blueprint(WithdrawalsBlueprint)
     api.register_blueprint(TransfersBlueprint)
-
-    with app.app_context():
-        db.create_all()
-
 
     return app
 
