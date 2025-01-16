@@ -13,6 +13,7 @@ class WithdrawalSchema(Schema):
 class TransferSchema(Schema):
     id = fields.Int(dump_only=True)
     amount = fields.Float(required=True)
+    memo = fields.Str(required=False)
     submitter_id = fields.Int(required=True)
     recipient_id = fields.Int(required=True)
 
