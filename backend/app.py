@@ -22,7 +22,8 @@ def create_app():
     app.config["OPENAPI_VERSION"] = "3.0.3"
 
     db.init_app(app)
-    migrate = Migrate(app, db)
+    with app.app_context():
+        db.create_all()
     api = Api(app)
 
     app.config["JWT_SECRET_KEY"] = "79023088310581544527589837667420155225"
