@@ -3,19 +3,32 @@ import { Card, Button, Form } from 'react-bootstrap';
 
 function Login() {
   
-  const [username, createUsername] = useState('');
-  const [password, createPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:5000/create', {
-      method: 'POST',
-      headers: { 'Content-Type' : 'application/json' },
-      body: JSON.stringify({
-        username: username,
-        password: password 
-      })
-    })
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json' },
+        body: JSON.stringify({
+          username: username,
+          password: password 
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("ok");
+      } else {
+        alert(JSON.stringify(data.message));
+      }
+    } catch {
+      alert("Something wrong with the server");
+    }
+    
   }
   
   return (
@@ -23,14 +36,22 @@ function Login() {
         <Card.Header>Banksie</Card.Header>
         <Card.Body>
           <Card.Title>Sign In</Card.Title>
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <Form.Group controlId='username'>
               <Form.Label>Username:</Form.Label>
-              <Form.Control type='text'></Form.Control>
+              <Form.Control 
+                type='text' 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </Form.Group>
             <Form.Group controlId='password'>
               <Form.Label>Password:</Form.Label>
-              <Form.Control type='text'></Form.Control>
+              <Form.Control 
+                type='text' 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </Form.Group>
             <Button type="submit">Sign In</Button>
           </Form>
