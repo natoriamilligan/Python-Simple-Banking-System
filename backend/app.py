@@ -4,6 +4,7 @@ from flask_smorest import Api
 from db import db
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 from models import BlocklistModel
 from resources.accounts import blp as AccountsBlueprint
@@ -13,6 +14,7 @@ from resources.transfers import blp as TransfersBlueprint
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
