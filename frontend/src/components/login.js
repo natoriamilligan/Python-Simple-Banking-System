@@ -9,7 +9,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({
@@ -17,6 +17,15 @@ function Login() {
           password: password 
         })
       })
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("accessToken", data.access_token)
+        alert(data.access_token)
+      } else {
+        alert("Login unsuccessful")
+      }
+      
     } catch {
       alert("Something wrong with the server");
     }
