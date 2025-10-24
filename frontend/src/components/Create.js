@@ -10,9 +10,9 @@ function Create() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await fetch('http://localhost:5000/create', {
+            const response = await fetch('http://localhost:5000/create', {
                 method: 'POST',
-                header: {'Content-Type' : 'application/json'},
+                headers: {'Content-Type' : 'application/json'},
                 body: JSON.stringify({
                     first_name : firstname,
                     last_name : lastname,
@@ -20,6 +20,12 @@ function Create() {
                     password : password
                 })
             })
+
+            if (response.ok) {
+                alert("ok")
+            } else {
+                alert(response.message)
+            }
         } catch {
             alert("Something wrong with the server");
         }
