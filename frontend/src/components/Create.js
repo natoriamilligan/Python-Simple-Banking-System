@@ -20,12 +20,6 @@ function Create() {
                     password : password
                 })
             })
-
-            if (response.ok) {
-                alert("ok")
-            } else {
-                alert(response.message)
-            }
         } catch {
             alert("Something wrong with the server");
         }
@@ -71,6 +65,7 @@ function Create() {
             </Form.Group>
             <Button type='submit'>Create Account</Button>
           </Form>
+          <Button>Log in</Button>
         </Card.Body>
     </Card>
     )
