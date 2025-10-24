@@ -9,26 +9,17 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({
           username: username,
           password: password 
         })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("ok");
-      } else {
-        alert(JSON.stringify(data.message));
-      }
+      })
     } catch {
       alert("Something wrong with the server");
     }
-    
   }
   
   return (
