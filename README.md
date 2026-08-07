@@ -1,4 +1,4 @@
-# Banksie
+# Full Deployed Banking Platform
 
 <details>
   <summary>Table of Contents</summary>
